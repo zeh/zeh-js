@@ -36,7 +36,7 @@ SimpleSignal.prototype.remove = function(__function, __scope, __params) {
 		if (this.scopes[fp] == __scope) {
 			this.functions.splice(fp, 1);
 			this.scopes.splice(fp, 1);
-			this.params.splice(__params);
+			this.params.splice(fp, 1);
 			removedAny = true;
 			fp -= 1;
 		}
