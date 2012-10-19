@@ -1,4 +1,4 @@
-(function(){
+﻿(function(){
 	"use strict";
 
 	// Super-simple signals class inspired by Robert Penner's AS3Signals:
