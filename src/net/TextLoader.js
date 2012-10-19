@@ -15,6 +15,9 @@
 		this.isLoading = false;
 		this.isLoaded = false;
 
+		this.requestData = null; // Content; equivalent to -d on curl
+
+		this.method = TextLoader.METHOD_GET;
 		this.URL = "";
 		this.data = "";
 		this.dataXML = "";
@@ -54,6 +57,9 @@
 	TextLoader.READYSTATE_LOADED = 2;				// The send method has been called. No data is available yet.
 	TextLoader.READYSTATE_INTERACTIVE = 3;			// Some data has been received; however, neither responseText nor responseBody is available.
 	TextLoader.READYSTATE_COMPLETE = 4;				// All the data has been received.
+
+	TextLoader.METHOD_GET = "GET";
+	TextLoader.METHOD_POST = "POST";
 
 
 	// ================================================================================================================
@@ -116,7 +122,20 @@
 		this.close();
 
 		this.fileRequest = this.getNewFileRequest();
-		this.fileRequest.open("GET", __url, true);
+
+		if (this.method == TextLoader.METHOD_POST) {
+			// POST
+			this.fileRequest.open("POST", __url, true);
+
+			this.fileRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			// These are not needed as per http://stackoverflow.com/questions/2623963/webkit-refused-to-set-unsafe-header-content-length
+			//this.fileRequest.setRequestHeader("Content-length", this.requestData.length.toString(10));
+			//this.fileRequest.setRequestHeader("Connection", "close");
+		} else {
+			// GET
+			this.fileRequest.open("GET", __url, true);
+		}
+
 		if (this.onFileRequestStateChanged.bind) {
 			this.fileRequest.onreadystatechange = this.onFileRequestStateChanged.bind(this);
 		} else {
@@ -126,9 +145,19 @@
 		}
 		// xmlhttp.setRequestHeader("Method", "POST "+sURL+" HTTP/1.1");
 		this.fileRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		this.fileRequest.send(null); // use querystrings here for post
+
+		this.fileRequest.send(this.requestData);
 		this.isLoading = true;
 		this.isLoaded = false;
+	};
+
+	TextLoader.prototype.setRequestData = function(__requestData) {
+		this.method = TextLoader.METHOD_POST;
+		this.requestData = __requestData;
+	};
+
+	TextLoader.prototype.setMethod = function(__method) {
+		this.method = __method;
 	};
 
 	TextLoader.prototype.close = function() {
