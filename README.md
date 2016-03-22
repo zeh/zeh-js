@@ -1,3 +1,5 @@
+### NOTICE: This repository has been deprecated. All my JS work is now on [typescript-tidbits](https://github.com/zeh/typescript-tidbits) (the TypeScript source is used to generate the JavaScript code).
+
 zeh-js
 ======
 
